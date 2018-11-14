@@ -9,8 +9,10 @@ using namespace std;
 //void calculate_element(const double xr[], const double xi[], double& r, double& i);
 
 void calculate_element(double& y,const double r[],const double i[], int n);
+void what();
 
-void main()
+
+int main()
 {
 	short x = 3;
 	char c;
@@ -22,8 +24,9 @@ void main()
 	
 
 	cout << x << c << endl;
-
+	what();
 	system("pause");
+	return 0;
 }
 
 void calculate_element(double& y, const double r[], const double i[],int n)
@@ -51,3 +54,9 @@ void calculate_element(double& y, const double r[], const double i[],int n)
 //		r = r + xr[j] * xr[j] + xi[j] * xi[j];
 //	}
 //}
+
+void what()
+{
+	using namespace std;
+	cout << "zjl sb" << endl;
+}

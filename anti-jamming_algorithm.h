@@ -7,9 +7,10 @@ const int Nmax = 16384;         //每次循环计算的点数
 const double PI = 3.1416;
 const int N = 4;               //四阵元
 /***************抗干扰算法声明*****************/
-void PI_INV(ifstream& fin, ofstream& fout);
+char* PI_INV(char* buf);
 void frequency_filter(ifstream& fin, ofstream& fout);
 void time_filter(ifstream& fin, ofstream& fout);
+void t_f_filter(ifstream& fin, ofstream& fout);
 /***************抗干扰算法声明*****************/
 
 /************数字信号处理函数声明***************/

@@ -1,3 +1,4 @@
+#include"pch.h"
 #include"anti-jamming_algorithm.h"
 #include<fstream>
 #include<iostream>
@@ -6,14 +7,14 @@ using namespace std;
 
 inline short pow_2(int n);
 
-void PI_INV(ifstream& fin,ofstream& fout)
+char* PI_INV(char* buf)
 {
 	/*****************************************/
 	clock_t start, finish;
 	double totaltime;
 	/*****************************************/
 
-	short x[Nmax * 4];
+	//short x[Nmax * 4];
 	double* x1_r = new double[Nmax];
 	double* x1_i = new double[Nmax]();
 	double* x2_r = new double[Nmax];
@@ -23,18 +24,12 @@ void PI_INV(ifstream& fin,ofstream& fout)
 	double* x4_r = new double[Nmax];
 	double* x4_i = new double[Nmax]();
 
+	short* x = (short*)buf;
 
-
-	//start = clock();
-	for (int i = 0; i < (Nmax * 4); i++)
-	{
-		fin.read((char*)&x[i], 2);
-	}
-	
+	//start = clock();	
 	for (int i = 0; i < (Nmax * 4); i++)
 	{
 		int n = (i / 4);
-
 		if (i % 4 == 0)
 			x1_r[n] = (double)x[i];
 		else if (i % 4 == 1)
@@ -43,12 +38,17 @@ void PI_INV(ifstream& fin,ofstream& fout)
 			x3_r[n] = (double)x[i];
 		else x4_r[n] = (double)x[i];
 	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		cout << x1_r[i] << endl;
+	}
 	/*finish = clock();
 	totaltime = (double)(finish - start) / CLOCKS_PER_SEC;
 	cout << "\n此程序的运行时间为" << totaltime << "秒！" << endl;
 */
-	start = clock();
-	/*********************************************************希尔伯特变换*********************************************************/
+//start = clock();
+/*********************************************************希尔伯特变换*********************************************************/
 	FFT(x1_r, x1_i, Nmax);
 	FFT(x2_r, x2_i, Nmax);
 	FFT(x3_r, x3_i, Nmax);
@@ -78,12 +78,12 @@ void PI_INV(ifstream& fin,ofstream& fout)
 	IFFT(x3_r, x3_i, Nmax);
 	IFFT(x4_r, x4_i, Nmax);
 	/*********************************************************希尔伯特变换*********************************************************/
-	finish = clock();
+	/*finish = clock();
 	totaltime = (double)(finish - start) / CLOCKS_PER_SEC;
 	cout << "\n此程序的运行时间为" << totaltime << "秒！" << endl;
-
-	//start = clock();
-	/*********************************************************求协方差矩阵*********************************************************/
+*/
+//start = clock();
+/*********************************************************求协方差矩阵*********************************************************/
 	double Rr[4][4], Ri[4][4];
 	double r, i;
 
@@ -138,25 +138,31 @@ void PI_INV(ifstream& fin,ofstream& fout)
 	totaltime = (double)(finish - start) / CLOCKS_PER_SEC;
 	cout << "\n此程序的运行时间为" << totaltime << "秒！" << endl;
 */
-	/*start = clock();*/
+/*start = clock();*/
 
-	/*******************************************************输出.dat文件*********************************************************/
-	unsigned data = 0;
-	for (int i = 0; i < (Nmax / 8); i++)
+/*******************************************************输出.dat文件*********************************************************/
+//unsigned data = 0;
+//for (int i = 0; i < (Nmax / 8); i++)
+//{
+//	data = 0;
+//	for (int j = 0; j < 8; j++)
+//	{
+//		if (yout[i * 8 + j] < 0)
+//			data = data + pow_2(7 - j);
+//	}
+//	fout.write((char*)&data, 1);
+//}
+	unsigned data[Nmax / 16] = {0};
+	for (int i = 0; i < (Nmax / 16); i++)
 	{
-		data = 0;
-		for (int j = 0; j < 8; j++)
+		for (int j = 0; j < 16; j++)
 		{
-			if (yout[i * 8 + j] < 0)
-				data = data + pow_2(7 - j);
+			if (yout[i * 16 + j] < 0)
+				data[i] = data[i] + pow_2(15 - j);
 		}
-		fout.write((char*)&data, 1);
 	}
 	/*******************************************************输出.dat文件*********************************************************/
-	//finish = clock();
-	//totaltime = (double)(finish - start) / CLOCKS_PER_SEC;
-	//cout << "\n此程序的运行时间为" << totaltime << "秒！" << endl;
-
+	
 	/**************************测试***************************/
 	//ofstream fout1("G:\\ch1.dat", ios::out | ios::binary);
 	//ofstream fout2("G:\\ch2.dat", ios::out | ios::binary);
@@ -203,6 +209,7 @@ void PI_INV(ifstream& fin,ofstream& fout)
 	delete[] x4_r;
 	delete[] x4_i;
 
+	return (char*)data;
 }
 
 
